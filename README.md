@@ -15,7 +15,7 @@ The following scripts and data generate the main figures for the study:
 - **Figure 4:** Rare and common variant architectures across complex traits.
 - **Figure 5:** Gene dosage responses across traits.
 
-### Additional Analysis Tools
+### Additional Developed Tools
 
 - **Jaccard-Based p-value (Python notebook):** A robust method for assessing gene set associations. The notebook is included for reproducing these calculations.
 - **S-LDSC:** Scripts to recompute GWAS enrichments for your geneset of interest using stratified LD score regression.
