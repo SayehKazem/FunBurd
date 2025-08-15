@@ -24,6 +24,6 @@ The following scripts and data generate the main figures for the study:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/<your-username>/FunBurd.git
+git clone https://github.com/SayehKazem/FunBurd.git
 
 
