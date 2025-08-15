@@ -1,4 +1,5 @@
 # FunBurd
+
 **Project:** *Determinants of pleiotropy and monotonic gene dosage responses across human traits*
 
 FunBurd is designed to test the association between variants aggregated across a gene set and a given trait. This repository contains all code and data required to reproduce the figures and statistical analyses presented in the project.
@@ -14,10 +15,16 @@ The following scripts and data generate the main figures for the study:
 - **Figure 4:** Rare and common variant architectures across complex traits.
 - **Figure 5:** Gene dosage responses across traits.
 
+### Additional Analysis Tools
+
+- **Jaccard-Based p-value (Python notebook):** A robust method for assessing gene set associations. The notebook is included for reproducing these calculations.
+- **S-LDSC:** Scripts to recompute GWAS enrichments for your geneset of interest using stratified LD score regression.
+
 ### File Types
 
 - `*.Rmd` and `*.md` files: Scripts for generating figures and statistical analyses.
-- `data/`: Contains datasets necessary for reproducing the figures.
+- `*.ipynb` files: Python notebooks for Jaccard-based p-value analysis.
+- `data/`: Contains all datasets necessary for reproducing the figures and analyses, included in this repository.
 
 ## Usage
 
@@ -25,5 +32,3 @@ The following scripts and data generate the main figures for the study:
 
 ```bash
 git clone https://github.com/SayehKazem/FunBurd.git
-
-
