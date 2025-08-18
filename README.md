@@ -1,11 +1,12 @@
 # FunBurd 
-**Project:** *Determinants of pleiotropy and monotonic gene dosage responses across human traits*
+FunBurd is designed to test the association between variants aggregated across a gene set and a given trait. This repository contains all code and data required to reproduce the figures and statistical analyses presented in the project.
 
 <p align="center">
   <img src="/FunBurd_Logo.png" alt="Project Logo" width="150"/>
 </p>
 
-FunBurd is designed to test the association between variants aggregated across a gene set and a given trait. This repository contains all code and data required to reproduce the figures and statistical analyses presented in the project.
+
+**Project:** *Determinants of pleiotropy and monotonic gene dosage responses across human traits*
 
 ## Workflow
 
