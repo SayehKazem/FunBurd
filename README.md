@@ -35,6 +35,7 @@ The following scripts and data generate the main figures for the study:
 </p>
 The coefficient B1 represents the effect size of a given gene set on the scaled trait(IRNT) of interest. In this analysis, we examined 14,792 associations, derived from 172 gene sets, 43 traits, and 2 types of variations (deletions and duplications). Our group has recently explored similar burden analysis models for the analysis of a single trait. 
 
+
 - **Jaccard-Based p-value (Python notebook):** A robust method for assessing gene set associations. The notebook is included for reproducing these calculations.
 - **S-LDSC:** Scripts to recompute GWAS enrichments for your geneset of interest using stratified LD score regression.
 
