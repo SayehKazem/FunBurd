@@ -6,6 +6,13 @@
 
 FunBurd is designed to test the association between variants aggregated across a gene set and a given trait. This repository contains all code and data required to reproduce the figures and statistical analyses presented in the project.
 
+## Workflow
+
+<p align="center">
+  <img src="/FunBurd_Logo.png" alt="Project Logo" width="150"/>
+</p>
+
+
 ## Repository Contents
 
 ### Codes and Figures
