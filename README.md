@@ -1,4 +1,7 @@
 # FunBurd
+<p align="center">
+  <img src="assets/logo.png" alt="Project Logo" width="200"/>
+</p>
 
 **Project:** *Determinants of pleiotropy and monotonic gene dosage responses across human traits*
 
