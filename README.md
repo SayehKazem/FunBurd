@@ -6,12 +6,16 @@ FunBurd is designed to test the association between variants aggregated across a
 </p>
 
 
-### **Project:** Determinants of pleiotropy and monotonic gene dosage responses across human traits
 
-## Project Workflow
+### 🧬 **Project Title**  
+**Determinants of Pleiotropy and Monotonic Gene Dosage Responses Across Human Traits**
+
+---
+
+## 🔄 Project Workflow
 
 <p align="center">
-  <img src="/Project_Workflow.jpeg" alt="Project Logo" width="1000"/>
+  <img src="/Project_Workflow.jpeg" alt="Project Workflow Diagram" width="1000"/>
 </p>
 
 
