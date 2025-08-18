@@ -1,5 +1,7 @@
-# FunBurd <p align="center">
-  <img src="/Logo_5.svg" alt="Project Logo" width="150"/>
+# FunBurd 
+
+<p align="center">
+  <img src="/FunBurd_Logo.png" alt="Project Logo" width="150"/>
 </p>
 
 **Project:** *Determinants of pleiotropy and monotonic gene dosage responses across human traits*
