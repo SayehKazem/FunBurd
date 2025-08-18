@@ -10,7 +10,7 @@ FunBurd is designed to test the association between variants aggregated across a
 ## Workflow
 
 <p align="center">
-  <img src="/Project_Workflow.png" alt="Project Logo" width="500"/>
+  <img src="/Project_Workflow.jpeg" alt="Project Logo" width="500"/>
 </p>
 
 
