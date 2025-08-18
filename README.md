@@ -1,6 +1,6 @@
 # FunBurd
 <p align="center">
-  <img src="assets/FunBurd_Logo.png" alt="Project Logo" width="200"/>
+  <img src="/FunBurd_Logo.png" alt="Project Logo" width="200"/>
 </p>
 
 **Project:** *Determinants of pleiotropy and monotonic gene dosage responses across human traits*
