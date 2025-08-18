@@ -37,7 +37,7 @@ The following scripts and data generate the main figures for the study:
 
 - `*.Rmd` and `*.md` files: Scripts for generating figures and statistical analyses.
 - `*.ipynb` files: Python notebooks for Jaccard-based p-value analysis.
-- `data/`: Contains all datasets necessary for reproducing the figures and analyses. All data files are in **RData format**.
+- `*.RData`: Binary data files in R format. These files contain all datasets required to reproduce the figures and analyses presented in this project.
   
 ## Usage
 
