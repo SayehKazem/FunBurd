@@ -1,5 +1,4 @@
-# FunBurd
-<p align="center">
+# FunBurd <p align="center">
   <img src="/FunBurd_Logo.png" alt="Project Logo" width="150"/>
 </p>
 
