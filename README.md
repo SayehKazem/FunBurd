@@ -35,7 +35,7 @@ The following scripts and data generate the main figures for the study:
 </p>
 
 - **Jaccard-Based p-value (Python notebook):** A robust method for assessing gene set associations. The notebook is included for reproducing these calculations.</p>  
-- **S-LDSC:** Scripts to recompute GWAS enrichments for your geneset of interest using stratified LD score regression.
+- **S-LDSC:** Scripts to recompute GWAS enrichments for the geneset of interest using stratified LD score regression.
 
 ### File Types
 
