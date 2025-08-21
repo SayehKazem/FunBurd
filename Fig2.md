@@ -1,7 +1,7 @@
 Fig2
 ================
 
-## Fig. 2: Heatmap of effect sizes for whole body tissue, cell type gene sets across traits (& Figure S2,S3 & ST6-ST9 )
+## Fig. 2: Heatmap of effect sizes for whole body tissue, cell type gene sets across traits (& Figure S2, S3, S13, S14, S17, S18)
 
 #### – Figure legend –
 
