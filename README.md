@@ -19,7 +19,7 @@ FunBurd is designed to test the association between variants aggregated across a
 ## Citation
 If you use this project or its code in your research or pipelines, please cite the corresponding paper. Your citation helps others discover the project and acknowledges our work.
 
-- **Paper:** Sayeh Kazem, Kuldeep Kumar, Martineau Jean-Louis, et al. "Gene dosage architecture across complex traits." medRxiv 2025.02.25.25322833; 2025.
+- **Paper:** Sayeh Kazem, Kuldeep Kumar, et al. "Gene dosage architecture across complex traits." medRxiv 2025.02.25.25322833; 2025.
 - **DOI Badge:** [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17038354.svg)](https://doi.org/10.5281/zenodo.17038354)
 
 ## Repository Contents
