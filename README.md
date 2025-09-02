@@ -1,4 +1,6 @@
 # FunBurd 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17038354.svg)](https://doi.org/10.5281/zenodo.17038354)
+
 FunBurd is designed to test the association between variants aggregated across a gene set and a given trait. This repository contains all code and data required to reproduce the figures and statistical analyses presented in the project.
 
 <p align="center">
