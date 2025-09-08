@@ -24,16 +24,7 @@ If you use this project or its code in your research or pipelines, please cite t
 
 ## Repository Contents
 
-### Codes and Figures
-
-The following scripts and data generate the main figures for the study:
-
-- **Figure 2:** Heatmap of effect sizes for whole-body tissues and cell-type gene sets across traits.
-- **Figure 3:** Dissecting pleiotropy, gene function, and genetic constraint.
-- **Figure 4:** Rare and common variant architectures across complex traits.
-- **Figure 5:** Gene dosage responses across traits.
-
-### Other Codes
+### Upstream Analysis Pipelines
 - **FunBurd (Python notebook):** FunBurd is designed to test the association between variants aggregated across a gene set and a given trait. The traits of interest were considered as a function of the number of genes within the gene set disrupted by CNVs. To avoid effect size inflation, due to multigenic CNVs, we adjusted for the number of genes (not members of the gene set) disrupted by the same CNV. We also adjusted for age, sex, and ancestry:
 <p align="center">
   <img src="/FunBurd_RegressionModel.png" alt="Regression Model" width="600"/>
@@ -41,6 +32,15 @@ The following scripts and data generate the main figures for the study:
 
 - **Jaccard-Based p-value (Python notebook):** A robust method for assessing gene set associations. The notebook is included for reproducing these calculations.</p>  
 - **S-LDSC:** Scripts to recompute GWAS enrichments for the geneset of interest using stratified LD score regression.
+
+### Downstream Analysis & Figures
+
+The following scripts and data generate the main figures for the study:
+
+- **Figure 2:** Heatmap of effect sizes for whole-body tissues and cell-type gene sets across traits.
+- **Figure 3:** Dissecting pleiotropy, gene function, and genetic constraint.
+- **Figure 4:** Rare and common variant architectures across complex traits.
+- **Figure 5:** Gene dosage responses across traits.
 
 ### File Types
 
