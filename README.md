@@ -30,7 +30,6 @@ If you use this project or its code in your research or pipelines, please cite t
   <img src="/FunBurd_RegressionModel.png" alt="Regression Model" width="600"/>
 </p>
 
-- **Jaccard-Based p-value (Python notebook):** A robust method for assessing gene set associations. The notebook is included for reproducing these calculations.</p>  
 - **S-LDSC:** Scripts to recompute GWAS enrichments for the geneset of interest using stratified LD score regression.
 
 ### Downstream Analysis & Figures
@@ -42,12 +41,22 @@ The following scripts and data generate the main figures for the study:
 - **Figure 4:** Rare and common variant architectures across complex traits.
 - **Figure 5:** Gene dosage responses across traits.
 
-### File Types
+### Other Codes
+- **Jaccard-Based p-value (Python notebook):** The robust method for assessing gene set associations. The approach conditions on the degree of overlap between gene sets using the Jaccard index. This method helps to avoid inflated significance that can arise from gene sets with high degrees of shared genes.</p>  
 
-- `*.Rmd` and `*.md` files: Scripts for generating figures and statistical analyses.
-- `*.ipynb` files: Python notebooks for Jaccard-based p-value analysis.
+### File Types
+- `*.ipynb` files: Python notebooks for FunBurd pieline and Jaccard-based p-value computation.
+- `*.Rmd` and `*.md` files: R scripts for handling all downstream analysis, generating the key figures and performing statistical tests for the study.
 - `*.RData`: Binary data files in R format. These files contain all datasets required to reproduce the figures and analyses presented in this project.
-  
+
+- Python Notebooks (.ipynb): These notebooks contain the code for the FunBurd pipeline and the Jaccard-based p-value computations.
+
+- R Scripts (.Rmd, .md): These files are used for all downstream analysis, including generating the study's key figures and performing statistical tests.
+
+- R Data Files (.RData): This directory contains all the binary data files needed to reproduce the figures and analyses presented in the project.
+
+
+
 ## Usage
 
 1. Clone the repository:
