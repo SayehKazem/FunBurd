@@ -5,7 +5,7 @@ FunBurd is designed to test the association between variants aggregated across a
   <img src="/FunBurd_Logo.png" alt="Project Logo" width="150"/>
 </p>
 
-
+https://github.com/user-attachments/assets/31558116-877f-43d1-87e5-a253ffa3e561
 
 ## **Project Title**  
 **Determinants of Pleiotropy and Monotonic Gene Dosage Responses Across Human Traits**
@@ -60,3 +60,7 @@ The following scripts and data generate the main figures for the study:
 
 ```bash
 git clone https://github.com/SayehKazem/FunBurd.git
+
+
+
+
