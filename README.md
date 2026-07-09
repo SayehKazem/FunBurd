@@ -13,7 +13,7 @@ https://github.com/user-attachments/assets/31558116-877f-43d1-87e5-a253ffa3e561
 ## Project Workflow
 
 <p align="center">
-  <img src="/Project_Workflow.jpeg" alt="Project Workflow Diagram" width="1000"/>
+  <img src="/Project_Workflow.png" alt="Project Workflow Diagram" width="1000"/>
 </p>
 
 ## Citation
