@@ -1,0 +1,541 @@
+---
+title: "Fig5"
+author: "Saye Kazem"
+output: github_document
+---
+
+## Fig. 5: Rare and common variant architectures across complex traits.
+
+#### -- Figure legend -- ####
+**Legend:** (A) Example of genetic and phenotypic correlations between fluid intelligence (FI) and 6 traits, with each point color-coded by correlation type: SNP-based genetic correlations, deletion, duplication burden correlations, loss-of-function SNV burden correlation, and phenotypic correlations. (B) The heatmap of burden correlations, for deletions and duplications in the lower and upper triangle matrices, respectively. Significant correlations are marked by asterisks (FDR corrected p-Jaccard). (C) Network graph illustrating the mean absolute correlations for deletions and duplications across five distinct functional trait categories. Node size reflects the number of traits in each category, and edge thickness corresponds to the correlation strength. (D) Scatter plot comparing effect size correlations between deletions and duplications, where orange lines represent the Total Least Squares regression. The dashed line indicates perfect concordance (y = x). (E) Boxplots illustrate the variance explained (heritability, R2) by gene sets for both brain and non-brain traits, based on regression analysis. (F-G) Scatter plots comparing CNV burden correlations (deletions and duplications) with SNP-based genetic correlations. (H-I) Scatter plots comparing CNV burden correlations with SNV burden correlations. Abbreviations: BMI: body mass index; EA: educational attainment; FI: fluid intelligence; TDI: townsend deprivation index; VSWM: visuospatial working memory; FVC: Forced vital capacity; Del: deletion; Dup: duplication; SNP: single nucleotide polymorphism; SNV: single nucleotide variants; LoF: loss of function.
+
+#### Libraries ####
+```{r setup, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(ggcorrplot)
+library(ggprism)
+library(ggpubr)
+library(MASS)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(Rmpfr)
+library(vegan)
+library(openxlsx)
+library(svglite)
+library(igraph)
+library(ggraph)
+library(forcats)
+library(knitr)
+library(patchwork)
+
+# Define Core Colors
+brain_colorcode  <- "orchid4"      
+nonbrain_colorcode <- "gold3"  
+in_base_size_ggprism <- 14
+
+message("Loading Figure 5 Data...")
+load("df_betweentrait_correlations.RData")
+load("df_traitlevel_stats.RData")
+load("df_tls_regression.RData") 
+
+# Helper Function: Total Least Squares
+total_least_squares <- function(X, Y) {
+  X <- as.matrix(X)
+  Y <- as.matrix(Y)
+  Z <- cbind(X, Y)
+  svd_result <- svd(Z)
+  V <- svd_result$v
+  nx <- ncol(X)
+  Vxy <- V[1:nx, (nx + 1):ncol(V)]
+  Vyy <- V[(nx + 1):ncol(V), (nx + 1):ncol(V)]
+  return(-Vxy %*% solve(Vyy))
+}
+
+# Robust function to calculate TLS slope and its p-value
+compute_tls_stats <- function(df, x_var, y_var) {
+  X <- df[[x_var]]; Y <- df[[y_var]]
+  
+  # 1. Slope
+  slope <- as.numeric(total_least_squares(X, Y))
+  
+  # 2. P-value (Testing deviation from slope = 0)
+  n <- length(X)
+  mean_x <- mean(X); mean_y <- mean(Y)
+  s_xx <- sum((X - mean_x)^2); s_yy <- sum((Y - mean_y)^2)
+  s_xy <- sum((X - mean_x) * (Y - mean_y))
+  
+  std_err <- sqrt((s_yy - slope * s_xy) / (n - 2)) / sqrt(s_xx)
+  t_stat <- slope / std_err
+  
+  # Calculate p-value
+  p_val <- 2 * (1 - pt(abs(t_stat), df = n - 2))
+  
+  return(data.frame(Slope = slope, P_Value = p_val))
+}
+
+build_scatter <- function(df, x_var, y_var, x_lab, y_lab) {
+  slope <- total_least_squares(df[[x_var]], df[[y_var]])
+  
+  ggplot(df, aes_string(x = x_var, y = y_var)) + 
+    geom_point(color = "grey", alpha=0.4) +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "darkgrey") +
+    geom_abline(slope = slope, intercept = 0, color = "orange", linewidth=1) +
+    coord_cartesian(ylim = c(-1, 1), xlim = c(-1, 1)) +
+    labs(x = x_lab, y = y_lab) +
+    theme_prism(border = FALSE, base_size = 14, base_fontface = "bold") + 
+    theme(axis.line = element_line(linewidth = 0.8))
+}
+```
+
+#### Panel A: Correlation with FI (Lollipop Chart)
+Description: Lollipop chart illustrating the correlation between fluid intelligence (FI) and six selected traits across multiple genetic and phenotypic correlation metrics. ####
+
+##### Panel A Data #####
+```{r, fig.width=7, fig.height=3 ,dpi=100 }
+load("df_betweentrait_correlations.Rdata")
+FI_Others_plot <- df_betweentrait_correlations %>%
+  filter(Trait1 == "FI" | Trait2 == "FI") %>%
+  mutate(Trait2 = ifelse(Trait1 == "FI", Trait2, Trait1)) %>%
+  dplyr::select(Trait2, Corr_DEL, Corr_DUP, Corr_SNV, Corr_SNP, Corr_Pheno) %>% # Fix applied here
+  pivot_longer(cols = starts_with("Corr_"), names_to = "correlation_type", values_to = "correlation") %>%
+  mutate(correlation_type = case_when(
+    correlation_type == "Corr_DEL" ~ "DEL-burden",
+    correlation_type == "Corr_DUP" ~ "DUP-burden",
+    correlation_type == "Corr_SNV" ~ "SNV-lof-burden",
+    correlation_type == "Corr_SNP" ~ "SNP (rg)",
+    correlation_type == "Corr_Pheno" ~ "Phenotype"
+  )) %>%
+  filter(Trait2 %in% c("Reaction", "Neuroticism", "TDI", "Redblood", "BMI", "StandingHeight")) %>%
+  mutate(Trait2 = fct_recode(factor(Trait2), "Height" = "StandingHeight")) %>%
+  mutate(Trait2 = factor(Trait2, levels = c("Reaction", "Neuroticism", "TDI", "Redblood", "BMI", "Height"))) %>%
+  mutate(correlation_type = factor(correlation_type, levels = c("Phenotype","DUP-burden","SNP (rg)","DEL-burden","SNV-lof-burden")))
+```
+
+##### Panel A Figure #####
+```{r, fig.width=5, fig.height=8, dpi=250}
+pA_lollipop <- ggplot(FI_Others_plot, aes(x=correlation, y=Trait2, color=correlation_type)) +
+  geom_errorbar(aes(xmin = 0, xmax = correlation), position = position_dodge(width = 0.5), height = 0, alpha=0.7) +
+  geom_point(size=2, position = position_dodge(width = 0.5), alpha=0.8) +
+  geom_vline(lty = 2, xintercept = 0, color='darkgrey') +
+  scale_color_manual(values=c("DEL-burden" = "red3", "DUP-burden" = "royalblue", "SNV-lof-burden" = "orange3", "SNP (rg)" = "green4", "Phenotype" = "purple4")) +
+  labs(x = "Correlation with FI", y = "", color = "Correlation Type") +
+  theme_prism(base_size = in_base_size_ggprism) + 
+  theme(panel.grid.major.y = element_blank(), panel.border = element_blank(), axis.ticks.y = element_blank(), axis.line = element_line(linewidth = 0.8))
+
+print(pA_lollipop)
+```
+
+
+##### Panel A Stats #####
+```{r, fig.width=18, fig.height=7 ,dpi=800 }
+kable(head(FI_Others_plot), format = "markdown", caption = "Extracted Correlations for Fluid Intelligence")
+```
+
+
+#### Panel B: Burden Correlation Heatmap
+Description: Heatmap displaying pairwise burden correlations for deletions (lower triangle) and duplications (upper triangle) across a subset of 14 complex traits.
+
+##### Panel B Data #####
+```{r, fig.width=18, fig.height=7 ,dpi=800 }
+# 1. Trait Subset
+SUBSET_Order <- c("HDL", "FVC", "EA", "FI", "Menopause", "Menarche", 
+                  "Depression", "Neuroticism", "Loneliness", "MoodAnxiety", "GuiltyFeelings", 
+                  "TDI", "VSWM1", "BMI", "HeartRate", "Hypertention", 
+                  "Triglycerides", "Platelet", "Redblood", "Gamma")
+
+# Filter data to the subset
+df_heatmap <- df_betweentrait_correlations %>%
+  filter(Trait1 %in% SUBSET_Order & Trait2 %in% SUBSET_Order)
+
+# 2. Initialize empty symmetric matrices
+Corr_Del_matrix <- matrix(NA, nrow = length(SUBSET_Order), ncol = length(SUBSET_Order), dimnames = list(SUBSET_Order, SUBSET_Order))
+Corr_Dup_matrix <- matrix(NA, nrow = length(SUBSET_Order), ncol = length(SUBSET_Order), dimnames = list(SUBSET_Order, SUBSET_Order))
+CorrPval_Del_matrix <- matrix(NA, nrow = length(SUBSET_Order), ncol = length(SUBSET_Order), dimnames = list(SUBSET_Order, SUBSET_Order))
+CorrPval_Dup_matrix <- matrix(NA, nrow = length(SUBSET_Order), ncol = length(SUBSET_Order), dimnames = list(SUBSET_Order, SUBSET_Order))
+
+# 3. Fill in the matrices explicitly 
+for(i in 1:nrow(df_heatmap)){
+  t1 <- as.character(df_heatmap$Trait1[i])
+  t2 <- as.character(df_heatmap$Trait2[i])
+  
+  # Correlations
+  Corr_Del_matrix[t1, t2] <- df_heatmap$Corr_DEL[i]
+  Corr_Del_matrix[t2, t1] <- df_heatmap$Corr_DEL[i]
+  
+  Corr_Dup_matrix[t1, t2] <- df_heatmap$Corr_DUP[i]
+  Corr_Dup_matrix[t2, t1] <- df_heatmap$Corr_DUP[i]
+  
+  # P-values (FDR Jaccard)
+  CorrPval_Del_matrix[t1, t2] <- df_heatmap$Corr_FDR_JaccardPval_DEL[i]
+  CorrPval_Del_matrix[t2, t1] <- df_heatmap$Corr_FDR_JaccardPval_DEL[i]
+  
+  CorrPval_Dup_matrix[t1, t2] <- df_heatmap$Corr_FDR_JaccardPval_DUP[i]
+  CorrPval_Dup_matrix[t2, t1] <- df_heatmap$Corr_FDR_JaccardPval_DUP[i]
+}
+
+# 4. Enforce the exact specified ordering on all matrices
+Corr_Del_matrix <- Corr_Del_matrix[SUBSET_Order, SUBSET_Order]
+Corr_Dup_matrix <- Corr_Dup_matrix[SUBSET_Order, SUBSET_Order]
+CorrPval_Del_matrix <- CorrPval_Del_matrix[SUBSET_Order, SUBSET_Order]
+CorrPval_Dup_matrix <- CorrPval_Dup_matrix[SUBSET_Order, SUBSET_Order]
+
+# 5. Combine Correlations: Lower = DEL, Upper = DUP
+combined_corr_ordered_subset <- Corr_Del_matrix
+combined_corr_ordered_subset[upper.tri(combined_corr_ordered_subset)] <- Corr_Dup_matrix[upper.tri(Corr_Dup_matrix)]
+diag(combined_corr_ordered_subset) <- Inf
+
+# 6. Combine P-values: Lower = DEL, Upper = DUP (Ensures stars match the colors!)
+combined_pval_ordered_subset <- CorrPval_Del_matrix
+combined_pval_ordered_subset[upper.tri(combined_pval_ordered_subset)] <- CorrPval_Dup_matrix[upper.tri(CorrPval_Dup_matrix)]
+diag(combined_pval_ordered_subset) <- NA # Prevent stars on the diagonal
+
+# 7. Convert P-values to stars
+significance_levels <- function(p) {
+  ifelse(is.na(p), "", ifelse(p < 0.05, "*", ""))
+}
+stars_matrix_subset <- matrix(significance_levels(combined_pval_ordered_subset), 
+                              nrow = nrow(combined_pval_ordered_subset),
+                              dimnames = list(SUBSET_Order, SUBSET_Order))
+kable(head(combined_corr_ordered_subset), format = "markdown", caption = "Corr Matrix")
+```
+
+
+##### Panel B Figure #####
+```{r, fig.width=7, fig.height=7, dpi=400}
+gap_indices <- c(1, 2, 4, 6, 11, 13, 16)
+line_positions <- gap_indices + 0.5
+
+# Base correlation plot
+pB_heatmap <- ggcorrplot(combined_corr_ordered_subset, 
+                         type = "full", 
+                         colors = c("darkblue", "white", "darkred"),
+                         show.diag = TRUE)
+
+# Add white separator lines for grouped blocks
+pB_heatmap <- pB_heatmap + 
+  geom_vline(xintercept = line_positions, color = "white", linewidth = 1, linetype = "solid") +
+  geom_hline(yintercept = line_positions, color = "white", linewidth = 1, linetype = "solid") 
+  #theme_prism(axis_text_angle = 45, border = FALSE, base_size = 14, base_fontface = "bold")
+
+# Overlay the correctly aligned FDR significance stars
+for (i in 1:nrow(combined_corr_ordered_subset)) {
+  for (j in 1:ncol(combined_corr_ordered_subset)) {
+    if (!is.na(combined_corr_ordered_subset[i, j]) && stars_matrix_subset[i, j] == "*") {
+      pB_heatmap <- pB_heatmap + annotate("text", x = i, y = j - 0.2, label = stars_matrix_subset[i, j], color = "grey38", size = 9, fontface = "bold")
+    }
+  }
+}
+
+print(pB_heatmap)
+```
+
+##### Panel B Stats #####
+```{r, fig.width=9, fig.height=9, dpi=400}
+# Display summary of FDR p-values used for heatmap annotations
+# Display summary of FDR p-values used for heatmap annotations
+kable(head(df_heatmap %>% dplyr::select(Trait1, Trait2, Corr_FDR_JaccardPval_DEL, Corr_FDR_JaccardPval_DUP)), format = "markdown", caption = "FDR Jaccard P-values for Categorized Heatmap")
+```
+#### Panel C: Mean Absolute Correlation Network ####
+Description: Spring-embedded network graph showing the mean absolute burden correlations among five major trait categories for deletions and duplications. Node size/alpha reflects the number of traits; edge width/alpha reflects correlation strength.
+
+##### Panel C Data & Stats #####
+```{r, fig.width=9, fig.height=9, dpi=400}
+# 1. Define trait categories (nodes)
+groups_list <- list(
+  'Blood Assays' = c('Albumin', 'IGF1', 'Cholesterol', 'HDL', 'LDL', 'Calcium', 'Platelet', 'Redblood', 'Gamma', 'HbA1c', 'Triglycerides', 'Glucose'),
+  'Reproductive and Activity Factors' = c('Menarche', 'Menopause', 'SexPartners', 'MET'),
+  'Physical Measure' = c('FVC', 'FEV1', 'StandingHeight', 'BirthWeight', 'BMI', 'BMD', 'Hypertention', 'HeartRate'),
+  'Cognitive Metrics' = c('EA', 'FI', 'SymbolDigit', 'TrailMaking1', 'TrailMaking2', 'Reaction', 'VSWM1', 'VSWM2', 'TDI'),
+  'Mental Health' = c('RiskTaking', 'Depression', 'GP', 'Neuroticism', 'Irritability', 'MoodSwings', 'Miserableness', 'GuiltyFeelings', 'Loneliness', 'MoodAnxiety')
+)
+
+trait_to_group <- stack(groups_list) %>% setNames(c("Trait", "Group")) %>% tibble::deframe()
+
+# 2. Filter and map traits to groups using the unified correlation dataframe
+Net_Corr <- df_betweentrait_correlations %>%
+  filter(!is.na(Corr_DEL), !is.na(Corr_DUP), !is.na(Trait1), !is.na(Trait2)) %>%
+  mutate(
+    Group1 = trait_to_group[Trait1],
+    Group2 = trait_to_group[Trait2]
+  )
+
+node_sizes <- data.frame(name = names(groups_list), Size = sapply(groups_list, length))
+
+# 3. Combined Edge Calculation for Mean Absolute Correlation
+calculate_mean_abs_corr <- function(g1, g2, corr_data, cnv_type) {
+  corr_col <- paste0("Corr_", cnv_type)
+  subset_df <- corr_data %>%
+    filter((Group1 == g1 & Group2 == g2) | (Group1 == g2 & Group1 == g1))
+  
+  abs_corrs <- abs(subset_df[[corr_col]])
+  mean_abs_corr <- mean(abs_corrs, na.rm = TRUE)
+  
+  if (is.nan(mean_abs_corr) || is.null(mean_abs_corr)) return(NULL)
+  return(data.frame(from = g1, to = g2, Metric = mean_abs_corr))
+}
+
+group_pairs <- t(combn(names(groups_list), 2))
+del_edges_corr <- do.call(rbind, apply(group_pairs, 1, function(row) calculate_mean_abs_corr(row[1], row[2], Net_Corr, "DEL")))
+dup_edges_corr <- do.call(rbind, apply(group_pairs, 1, function(row) calculate_mean_abs_corr(row[1], row[2], Net_Corr, "DUP")))
+
+del_edges_corr$CNV_Type <- "DEL"
+dup_edges_corr$CNV_Type <- "DUP"
+
+all_edges <- rbind(del_edges_corr, dup_edges_corr)
+
+# Extract scaling limits for the plot
+global_max_metric <- max(all_edges$Metric, na.rm = TRUE)
+min_node_size_val <- min(node_sizes$Size, na.rm = TRUE)
+max_node_size_val <- max(node_sizes$Size, na.rm = TRUE)
+kable(head(all_edges), format = "markdown", caption = "Corr Matrix")
+
+```
+
+##### Panel C Figure #####
+```{r, fig.width=20, fig.height=16, dpi=200}
+# 1. Create a single graph object with all edges
+graph_combined <- graph_from_data_frame(d = all_edges, vertices = node_sizes, directed = FALSE)
+
+# 2. Create the weighted layout
+set.seed(42)
+layout <- create_layout(graph_combined, layout = 'fr', weights = E(graph_combined)$Metric)
+
+# 3. Build the publication-ready plot
+pC_network <- ggraph(layout) +
+  geom_edge_fan(
+    aes(
+      color = CNV_Type,
+      width = Metric,
+      label = round(Metric, 2),
+      alpha = Metric # Alpha mapped to Metric for edges
+    ),
+    label_dodge = unit(4, 'mm'),
+    angle_calc = 'along',
+    label_colour = 'grey20',
+    label_size = 8
+  ) +
+  geom_node_point(
+    aes(size = Size, alpha = Size), # Alpha mapped to Size
+    color = "grey20" 
+  ) +
+  geom_node_label(
+    aes(label = name), 
+    repel = TRUE, 
+    size = 8, 
+    fontface = "bold", 
+    fill = alpha("white", 0.9), 
+    box.padding = unit(2, "lines"), 
+    label.r = unit(0.2, "lines"), 
+    label.size = 0.6 
+  ) +
+  # Scales
+  scale_edge_width(
+    range = c(1, 8),
+    name = "Mean Absolute\nCorrelation ($|\\bar{r}|$)",
+    limits = c(0, global_max_metric)
+  ) +
+  scale_edge_color_manual(
+    name = "CNV Type",
+    values = c("DEL" = "darkred", "DUP" = "darkblue")
+  ) +
+  scale_edge_alpha_continuous(
+    name = "Mean Absolute\nCorrelation ($|\\bar{r}|$)",
+    range = c(0.2, 0.9),
+    limits = c(0, global_max_metric),
+    guide = "none"
+  ) +
+  scale_size_continuous(
+    range = c(10, 30),
+    name = "Number of Traits"
+  ) +
+  scale_alpha_continuous(
+    name = "Number of Traits", 
+    range = c(0.4, 0.9),       
+    limits = c(min_node_size_val, max_node_size_val),
+    guide = "legend"           
+  ) +
+  scale_fill_manual(
+    values = c("white"),
+    guide = "none" 
+  ) +
+  theme_graph(base_family = 'sans') +
+  labs(title = "Combined Network of DEL and DUP Trait Associations\n(Mean Absolute Correlation)") +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 24, face = "bold"),
+    legend.position = 'right',
+    legend.title = element_text(size = 18, face = "bold"),
+    legend.text = element_text(size = 16)
+  )
+
+print(pC_network)
+```
+
+
+##### Panel D Data #####
+
+```{r, fig.width=5, fig.height=5, dpi=200}
+df_pD <- df_betweentrait_correlations %>% 
+  filter(Include_In_DEL_DUP_Corr == TRUE) %>% 
+  drop_na(Corr_DUP, Corr_DEL)
+
+# Calculate the Total Least Squares (TLS) slope
+slope_pD <- total_least_squares(df_pD$Corr_DUP, df_pD$Corr_DEL)
+kable(head(df_pD), format = "markdown", caption = "Del-Dup Burden Corr")
+```
+
+##### Panel D Figure #####
+
+```{r, fig.width=4, fig.height=4, dpi=180}
+pD_scatter <- ggplot(df_pD, aes(x = Corr_DUP, y = Corr_DEL)) + 
+  geom_point(color = "grey", alpha = 0.4) +
+  # Dashed line represents perfect concordance (y = x)
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "darkgrey") +
+  # Orange line represents the TLS regression fit
+  geom_abline(slope = slope_pD, intercept = 0, color = "orange", linewidth = 1) +
+  coord_cartesian(ylim = c(-1, 1), xlim = c(-1, 1)) +
+  labs(x = "Burden Correlation - Dup", y = "Burden Correlation - Del") +
+  theme_prism(border = FALSE, base_size = 14, base_fontface = "bold") + 
+  theme(axis.line = element_line(linewidth = 0.8))
+
+print(pD_scatter)
+```
+
+##### Panel D Stats #####
+
+```{r, fig.width=4, fig.height=4, dpi=180}
+stats_pD <- compute_tls_stats(df_pD, "Corr_DUP", "Corr_DEL")
+
+# 2. Display in a clean table
+kable(stats_pD, format = "markdown", caption = "TLS Regression Statistics (Dup vs Del)")
+```
+
+
+
+##### Panel E Data #####
+```{r, fig.width=4, fig.height=4, dpi=180}
+# Reshape the trait-level stats into long format for plotting
+df_variance <- df_traitlevel_stats %>%
+  dplyr::select(Trait, Trait_Cat, Del = Del_VarianceExplained, Dup = Dup_VarianceExplained) %>%
+  pivot_longer(cols = c(Del, Dup), names_to = "CNV_Type", values_to = "Heritability") %>%
+  drop_na(Heritability) %>%
+  # Ensure clean naming for the legend and correct factor order
+  mutate(Trait_Cat = ifelse(Trait_Cat == "Brain", "Brain", "Non-Brain")) %>%
+  mutate(Trait_Cat = factor(Trait_Cat, levels = c("Brain", "Non-Brain")),
+         CNV_Type = factor(CNV_Type, levels = c("Del", "Dup")))
+kable(head(subset(df_variance,select=c('Trait', 'Trait_Cat','CNV_Type','Heritability'))), format = "markdown", caption = "Variance Explained")
+```
+
+##### Panel E Figure #####
+```{r, fig.width=4, fig.height=4, dpi=180}
+pE_variance <- ggplot(df_variance, aes(x = CNV_Type, y = Heritability, fill = Trait_Cat)) +
+  geom_boxplot(outlier.shape = NA, width = 0.5, alpha = 0.82) +
+  geom_jitter(
+    size = 0.8,
+    alpha = 1,
+    shape = 21,
+    stroke = 0.4,
+    position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.5)
+  ) + 
+  scale_fill_manual(values = c("Brain" = "orchid4", "Non-Brain" = "gold3")) +
+  labs(x = "", y = "Variance explained, R2\n (%)") +
+  theme_prism(border = FALSE, base_size = 14, base_fontface = "bold") +
+  theme(
+    legend.position = "none",
+    axis.line = element_line(linewidth = 0.8)
+  ) + 
+  ylim(0, 0.2)
+
+print(pE_variance)
+```
+
+##### Panel E Stats #####
+```{r, fig.width=4, fig.height=4, dpi=180}
+# 1. Compute Wilcoxon Rank Sum tests for Del and Dup separately
+wilcox_del <- wilcox.test(Heritability ~ Trait_Cat, data = subset(df_variance, CNV_Type == "Del"))
+wilcox_dup <- wilcox.test(Heritability ~ Trait_Cat, data = subset(df_variance, CNV_Type == "Dup"))
+
+# 2. Adjust p-values using FDR
+pvals <- c(wilcox_del$p.value, wilcox_dup$p.value)
+pvals_fdr <- p.adjust(pvals, method = "fdr")
+
+# 3. Compile into a clean statistics table
+stats_panel_e <- data.frame(
+  CNV_Type = c("Del", "Dup"),
+  Test = "Wilcoxon Rank Sum Test",
+  Comparison = "Brain vs Non-Brain",
+  W_Statistic = c(wilcox_del$statistic, wilcox_dup$statistic),
+  P_Value = pvals,
+  FDR_Q_Value = pvals_fdr
+)
+
+kable(stats_panel_e, format = "markdown", caption = "Heritability Variance Explained Stats")
+```
+
+
+
+##### Panel F & G  Data #####
+```{r, fig.width=4, fig.height=4, dpi=180}
+# F & G: SNP vs DEL/DUP (Intersection of valid pairs)
+df_pFG <- df_betweentrait_correlations %>% 
+  filter(Include_In_SNP_DEL_Corr == TRUE & Include_In_SNP_DUP_Corr == TRUE) %>% 
+  drop_na(Corr_SNP, Corr_DEL, Corr_DUP)
+kable(head(df_pFG), format = "markdown")
+
+```
+
+##### Panel F & G Figure #####
+```{r, fig.width=8, fig.height=4, dpi=180}
+pF_scatter <- build_scatter(df_pFG, "Corr_SNP", "Corr_DEL", "Genetic Correlation - SNP", "Burden Correlation - Del")
+pG_scatter <- build_scatter(df_pFG, "Corr_SNP", "Corr_DUP", "Genetic Correlation - SNP", "Burden Correlation - Dup")
+
+print(pF_scatter | pG_scatter)
+
+```
+
+##### Panel F & G Stats #####
+```{r, fig.width=4, fig.height=4, dpi=180}
+stats_pF <- compute_tls_stats(df_pFG, "Corr_SNP", "Corr_DEL")
+stats_pG <- compute_tls_stats(df_pFG, "Corr_SNP", "Corr_DUP")
+
+stats_fg <- bind_rows(stats_pF, stats_pG) %>% 
+  mutate(Panel = c("Panel F (SNP vs DEL)", "Panel G (SNP vs DUP)")) %>%
+  dplyr::select(Panel, Slope, P_Value) 
+
+kable(stats_fg, format = "markdown", caption = "TLS Regression Statistics (SNP vs CNV)")
+```
+
+
+##### Panel H & I  Data #####
+
+```{r, fig.width=4, fig.height=4, dpi=180}
+# H & I: SNV vs DEL/DUP (Intersection of valid pairs)
+df_pHI <- df_betweentrait_correlations %>% 
+  filter(Include_In_SNV_DEL_Corr == TRUE & Include_In_SNV_DUP_Corr == TRUE) %>% 
+  drop_na(Corr_SNV, Corr_DEL, Corr_DUP)
+kable(head(df_pHI), format = "markdown")
+```
+
+##### Panel H & I  Figure #####
+
+```{r, fig.width=8, fig.height=4, dpi=180}
+library(patchwork)
+
+pH_scatter <- build_scatter(df_pHI, "Corr_SNV", "Corr_DEL", "Burden Correlation - SNV", "Burden Correlation - Del")
+pI_scatter <- build_scatter(df_pHI, "Corr_SNV", "Corr_DUP", "Burden Correlation - SNV", "Burden Correlation - Dup")
+
+print(pH_scatter | pI_scatter)
+```
+
+##### Panel H & I  Stats #####
+```{r, fig.width=8, fig.height=4, dpi=180}
+stats_pH <- compute_tls_stats(df_pHI, "Corr_SNV", "Corr_DEL")
+stats_pI <- compute_tls_stats(df_pHI, "Corr_SNV", "Corr_DUP")
+
+stats_hi <- bind_rows(stats_pH, stats_pI) %>% 
+  mutate(Panel = c("Panel H (SNV vs DEL)", "Panel I (SNV vs DUP)")) %>%
+  dplyr::select(Panel, Slope, P_Value)
+
+kable(stats_hi, format = "markdown", caption = "TLS Regression Statistics (SNV vs CNV)")
+
+```
