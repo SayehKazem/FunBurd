@@ -288,7 +288,7 @@ ht1 <- Heatmap(
 draw(ht1, padding = unit(c(0.5, 2, 0.5, 0.5), "cm"))
 ```
 
-![](Fig2_June2026_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](Figure2_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 #### Panel B: Proportion of Associations/Enrichmenets
 
@@ -401,7 +401,7 @@ p_panel_b <- ggplot(df_fantom_props, aes(x = Type, y = prop, fill = Type)) +
 print(p_panel_b)
 ```
 
-![](Fig2_June2026_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](Figure2_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ##### Panel B Stats
 
@@ -589,7 +589,7 @@ p_panel_c <- ggplot(df_panel_c_props, aes(x = Tissue_Class, y = prop, fill = Tis
 print(p_panel_c)
 ```
 
-![](Fig2_June2026_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](Figure2_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ##### Panel C Stats
 
@@ -783,7 +783,7 @@ p_panel_d_final <- p_del + p_dup
 print(p_panel_d_final)
 ```
 
-![](Fig2_June2026_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](Figure2_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ##### Panel D Stats
 
@@ -955,7 +955,7 @@ p_summary <- ggplot(df_plot, aes(x = N_Sig, y = Concordance)) +
 print(p_summary)
 ```
 
-![](Fig2_June2026_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](Figure2_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ##### Panel E Stats
 

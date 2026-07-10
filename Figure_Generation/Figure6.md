@@ -114,7 +114,7 @@ p_overlap_bars <- ggplot(df_overlap, aes(fill = Category, y = Percentage, x = Tr
 print(p_overlap_bars)
 ```
 
-![](Fig6_June2026_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](Figure6_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ##### Panel A Stats
 
@@ -169,7 +169,7 @@ p_overlap_box <- ggplot(df_overlap_box, aes(x = Trait_Cat, y = Percentage, fill 
 print(p_overlap_box)
 ```
 
-![](Fig6_June2026_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](Figure6_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ##### Panel B Stats
 
@@ -260,7 +260,7 @@ p_mono_bars <- ggplot(df_mono, aes(x = Trait, y = Prop, fill = interaction(Trait
 print(p_mono_bars)
 ```
 
-![](Fig6_June2026_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](Figure6_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ##### Panel D Figure
 
@@ -294,7 +294,7 @@ print(p_mono_box)
     ## Warning: Removed 2 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
-![](Fig6_June2026_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](Figure6_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ##### Panel D Stats
 
@@ -401,7 +401,7 @@ p_lines <- ggplot(df_lines, aes(x = Dosage_Type, y = Effect_Size, group = Genese
 print(p_lines)
 ```
 
-![](Fig6_June2026_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](Figure6_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 #### Panel F & G : Del-Dup Effect Size Correlations
 
@@ -479,7 +479,7 @@ p_corr_bars <- ggplot(df_corr, aes(x = Trait, y = cor_del_dup, fill = Trait_Cat)
 print(p_corr_bars)
 ```
 
-![](Fig6_June2026_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](Figure6_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 #### Panel G Figure
 
@@ -508,7 +508,7 @@ p_corr_box <- ggplot(df_corr, aes(x = Trait_Cat, y = cor_del_dup, fill = Trait_C
 print(p_corr_box)
 ```
 
-![](Fig6_June2026_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](Figure6_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 #### Panel F & G Stats
 

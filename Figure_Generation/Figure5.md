@@ -156,7 +156,7 @@ print(pA_lollipop)
 
     ## `height` was translated to `width`.
 
-![](Fig5_June2026_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](Figure5_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ##### Panel A Stats
 
@@ -298,7 +298,7 @@ for (i in 1:nrow(combined_corr_ordered_subset)) {
 print(pB_heatmap)
 ```
 
-![](Fig5_June2026_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](Figure5_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ##### Panel B Stats
 
@@ -470,7 +470,7 @@ pC_network <- ggraph(layout) +
 print(pC_network)
 ```
 
-![](Fig5_June2026_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](Figure5_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ##### Panel D Data
 
@@ -512,7 +512,7 @@ pD_scatter <- ggplot(df_pD, aes(x = Corr_DUP, y = Corr_DEL)) +
 print(pD_scatter)
 ```
 
-![](Fig5_June2026_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](Figure5_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ##### Panel D Stats
 
@@ -579,7 +579,7 @@ pE_variance <- ggplot(df_variance, aes(x = CNV_Type, y = Heritability, fill = Tr
 print(pE_variance)
 ```
 
-![](Fig5_June2026_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](Figure5_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ##### Panel E Stats
 
@@ -640,7 +640,7 @@ pG_scatter <- build_scatter(df_pFG, "Corr_SNP", "Corr_DUP", "Genetic Correlation
 print(pF_scatter | pG_scatter)
 ```
 
-![](Fig5_June2026_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](Figure5_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 ##### Panel F & G Stats
 
@@ -692,7 +692,7 @@ pI_scatter <- build_scatter(df_pHI, "Corr_SNV", "Corr_DUP", "Burden Correlation 
 print(pH_scatter | pI_scatter)
 ```
 
-![](Fig5_June2026_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](Figure5_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 ##### Panel H & I Stats
 
