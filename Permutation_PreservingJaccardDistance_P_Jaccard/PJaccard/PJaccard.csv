@@ -1,0 +1,6 @@
+trait1,surrogate_p_value_delBased,surrogate_p_value_dupBased
+BMI,0.557,0.654
+EA,0.0,0.008
+FI,0.581,0.464
+HeartRate,0.118,0.094
+LDL,0.187,0.311
