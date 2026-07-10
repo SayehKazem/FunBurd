@@ -30,8 +30,6 @@ If you use this project or its code in your research or pipelines, please cite t
   <img src="/FunBurd_RegressionModel.png" alt="Regression Model" width="600"/>
 </p>
 
-- **S-LDSC:** Scripts to recompute GWAS enrichments for the geneset of interest using stratified LD score regression.
-
 ### Downstream Analysis & Figures
 
 The following scripts and data generate the main figures for the study:
