@@ -19,7 +19,7 @@ https://github.com/user-attachments/assets/31558116-877f-43d1-87e5-a253ffa3e561
 ## Citation
 If you use this project or its code in your research or pipelines, please cite the corresponding paper. Your citation helps others discover the project and acknowledges our work.
 
-- **Paper:** Sayeh Kazem, Kuldeep Kumar, et al. "Gene dosage architecture across complex traits." medRxiv 2025.02.25.25322833; 2025.
+- **Paper:** Sayeh Kazem, Kuldeep Kumar, et al. "Determinants of functional burden pleiotropy and gene dosage responses across human traits" [medRxiv 2025.02.25.25322833; 2025](https://www.medrxiv.org/content/10.1101/2025.02.25.25322833v3). 
 - **DOI Badge:** [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17369429.svg)](https://doi.org/10.5281/zenodo.17369429)
 
 ## Repository Contents
