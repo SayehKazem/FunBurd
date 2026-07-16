@@ -37,6 +37,7 @@ The following scripts and data ([`Figure_Generation/`](Figure_Generation)) gener
 
 - **Figure 2:** Tissue-specific associations of CNVs with complex traits.
 - **Figure 3:** Whole-body cell type-specific associations of CNVs with complex traits.
+- **Figure 4:** Dissecting pleiotropy, gene function, and genetic constraint.
 - **Figure 5:** Rare and common variant architectures across complex traits.
 - **Figure 6:** Gene dosage responses across traits and functional gene sets.
 
