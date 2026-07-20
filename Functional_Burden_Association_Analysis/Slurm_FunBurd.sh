@@ -9,10 +9,10 @@
 #SBATCH --ntasks=4
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=1GB
-#SBATCH --account=rrg-jacquese
+#SBATCH --account=account
 #SBATCH --output=_log/%x_%A_%a.out
 #SBATCH --error=_log/%x_%A_%a.err
-#SBATCH --mail-user=sayeh.kazem@umontreal.ca
+#SBATCH --mail-user=email
 #SBATCH --mail-type=ALL
 
 # ---------------------------------------------------------------------
@@ -28,6 +28,6 @@ module load glost/0.3.1
 
 #--------------------------------------------------------------------------------------------
 # Paramter files
-cd links/projects/rrg-jacquese/sayeh94/NewProject_2023/All_Wiener/FunBurd_Pipeline_on_ToyDataset
+cd links/projects/FunBurd_Pipeline_on_ToyDataset
 
 srun glost_launch Args_File_FunBurd.txt
